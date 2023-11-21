@@ -3,6 +3,7 @@ import sqlite3
 import datetime
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
+import os
 
 app = Flask(__name__)
 
@@ -67,5 +68,7 @@ def login():
     return jsonify(response), status_code
 
 
-if __name__ == '__main__':    
-    app.run(host='0.0.0.0', port=8085)
+if __name__ == '__main__':
+    ip = os.environ.get('IP')
+    sport = os.environ.get('port')
+    app.run(host=ip, port=sport)
