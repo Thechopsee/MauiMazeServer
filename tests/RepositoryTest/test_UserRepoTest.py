@@ -1,6 +1,6 @@
 import sys
 import pytest
-sys.path.append('../../repositories')
+sys.path.append('/repositories')
 from userRepository import UserRepository
 
 

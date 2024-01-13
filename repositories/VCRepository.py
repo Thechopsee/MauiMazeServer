@@ -3,7 +3,7 @@ import sqlite3
 class VCRepository:
 	@staticmethod
 	def save_verification_code(code):
-		connection = sqlite3.connect("../../test.db")
+		connection = sqlite3.connect("test.db")
 		cursor = connection.cursor()
 
 		cursor.execute('INSERT INTO VerificationCodes (code) VALUES (?)', (code,))
@@ -13,7 +13,7 @@ class VCRepository:
 		
 	@staticmethod
 	def updateCode(code):
-		connection = sqlite3.connect("../../test.db")
+		connection = sqlite3.connect("test.db")
 		cursor = connection.cursor()
 
 		cursor.execute("UPDATE VerificationCodes SET used=1 WHERE code='"+str(code)+"'")
@@ -23,7 +23,7 @@ class VCRepository:
 
 	@staticmethod
 	def isCodeTaken(codee):
-		con = sqlite3.connect("../../test.db")
+		con = sqlite3.connect("test.db")
 		cur = con.cursor()
 		res = cur.execute("SELECT used FROM VerificationCodes WHERE code='"+codee+"'")
 		if(res is None):
