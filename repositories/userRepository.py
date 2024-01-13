@@ -10,3 +10,10 @@ class UserRepository:
             return -1
         else:
             return res.fetchone()
+            
+    @staticmethod
+    def registerUser(email,password):
+        con = sqlite3.connect("test.db")
+        cur = con.cursor()
+        cur.execute("INSERT INTO User (email,password) VALUES (?,?)",(email,password))
+        con.commit()
