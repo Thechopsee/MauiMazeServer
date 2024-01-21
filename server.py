@@ -94,7 +94,7 @@ def createCode():
     VCRepository.save_verification_code(kod)
     return "ok",200
 
-@app.route('/saveRecord', methods=['GET'])
+@app.route('/saveRecord', methods=['POST'])
 def saveRecord():
     record = request.get_json()
     grID=RecordRepository.saveRecordtoDatabase(record)
