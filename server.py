@@ -102,7 +102,10 @@ def saveRecord():
     formatedRecords=[]
     print(record["records"])
     for move in record["records"]:
-        tupled=(move["percentagex"],move["percentagey"])
+        hw=0
+        if(move["hitWall"] is 'True'):
+            hw=1
+        tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID)
         formatedRecords.append((tupled))
     RecordRepository.saveMovesToDatabase(formatedRecords)
 
