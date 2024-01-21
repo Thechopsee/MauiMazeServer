@@ -103,7 +103,7 @@ def saveRecord():
     print(record["records"])
     for move in record["records"]:
         hw=0
-        if(move["hitWall"] is 'True'):
+        if(move["hitWall"] == 'True'):
             hw=1
         tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID)
         formatedRecords.append((tupled))
