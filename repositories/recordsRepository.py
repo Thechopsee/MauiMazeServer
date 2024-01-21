@@ -10,7 +10,7 @@ class RecordRepository:
     def saveRecordtoDatabase(record):
         con = sqlite3.connect("test.db")
         cur = con.cursor()
-        cur.execute("INSERT INTO GameRecord (mazeID,userID,timeInMilliSeconds,hitWallsCount,cellPathString) VALUES (?,?,?,?,?)",(record.mazeID,record.user.ID,record.timeInMilliSeconds,record.hitWallsCount,record.cellPathString))
+        cur.execute("INSERT INTO GameRecord (mazeID,userID,timeInMilliSeconds,hitWallsCount,cellPathString) VALUES (?,?,?,?,?)",(record.get("mazeID"),record.get("userID"),record.get("timeInMilliSeconds"),record.get("hitWallsCount"),record.get("cellPathString")))
         con.commit()
         last_id = cur.lastrowid
         return last_id
