@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3 
 import datetime
+import json
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
 from repositories.VCRepository import VCRepository
@@ -99,7 +100,8 @@ def saveRecord():
     record = request.get_json()
     grID=RecordRepository.saveRecordtoDatabase(record)
     formatedRecords=[]
-    for move in record.records:
+    python_object = json.loads(record)
+    for move in python_object.records:
         tupled=(move.percentagex,move.percentagey,move.hitWall,move.deltaTinMilisec,grID)
         formatedRecords.append((tupled))
     RecordRepository.saveMovesToDatabase(formatedRecords)
