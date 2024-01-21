@@ -108,6 +108,7 @@ def saveRecord():
         tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID)
         formatedRecords.append((tupled))
     RecordRepository.saveMovesToDatabase(formatedRecords)
+    return "ok",200
 
 if __name__ == '__main__':
     ip = os.environ.get('IP')
