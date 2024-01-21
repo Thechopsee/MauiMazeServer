@@ -4,6 +4,7 @@ import datetime
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
 from repositories.VCRepository import VCRepository
+from repositories.recordsRepository import RecordRepository
 from tools.VerificationCodeGenerator import VerificationCodeGenerator
 import os
 
@@ -93,6 +94,15 @@ def createCode():
     VCRepository.save_verification_code(kod)
     return "ok",200
 
+@app.route('/saveRecord', methods=['GET'])
+def saveRecord():
+    record = request.get_json()
+    grID=RecordRepository.saveRecordtoDatabase(record)
+    formatedRecords=[]
+    for move in record.records:
+        tupled=(move.percentagex,move.percentagey,move.hitWall,move.deltaTinMilisec,grID)
+        formatedRecords.append((tupled))
+    RecordRepository.saveMovesToDatabase(formatedRecords)
 
 if __name__ == '__main__':
     ip = os.environ.get('IP')
