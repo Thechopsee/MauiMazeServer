@@ -100,6 +100,7 @@ def saveRecord():
     record = request.get_json()
     grID=RecordRepository.saveRecordtoDatabase(record)
     formatedRecords=[]
+    print(record["records"])
     for move in record["records"]:
         tupled=(move["percentagex"],move["percentagey"],move["hitWall"],move["deltaTinMilisec"],grID)
         formatedRecords.append((tupled))
