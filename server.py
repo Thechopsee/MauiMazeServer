@@ -35,6 +35,16 @@ def loadMaze():
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
+
+@app.route('/loadRecord', methods=['POST'])
+def loadRecord():
+    data = request.get_json()
+    id = data.get('mazeID')
+    result=RecordRepository.loadRecordsbyMaze(id)
+    response =  result
+    status_code = 200
+    return jsonify(response), status_code
+
 @app.route('/loadMazeCount', methods=['POST'])
 def loadMazeCount():
     data = request.get_json()
