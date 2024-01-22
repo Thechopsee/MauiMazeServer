@@ -18,5 +18,5 @@ class GameRecord:
             "timeInMilliSeconds": self.timeInMilliSeconds,
             "hitWallsCount": self.hitWallsCount,
             "cellPathString": self.cellPathString,
-            "records": [record.to_dict() for record in self.records]
+            "records": [record.__dict__ for record in self.records]
         }
