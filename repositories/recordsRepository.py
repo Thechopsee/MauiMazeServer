@@ -33,6 +33,20 @@ class RecordRepository:
                 gr.records.append(MoveRecord(y[0],y[1],y[2],y[3],y[4]))
             gameRecords.append(gr)
         return gameRecords
+    @staticmethod
+    def loadRecordsbyUser(uid):
+        con = sqlite3.connect("test.db")
+        cur = con.cursor()
+        res = cur.execute("SELECT * FROM GameRecord WHERE userID="+str(uid))
+        fetched=res.fetchall()
+        gameRecords=[]
+        for x in fetched:
+            gr=GameRecord(x[0],x[1],x[2],x[3],x[4],x[5])
+            fetchedmoves=RecordRepository.getMoves(x[0])
+            for y in fetchedmoves:
+                gr.records.append(MoveRecord(y[0],y[1],y[2],y[3],y[4]))
+            gameRecords.append(gr)
+        return gameRecords
 
     @staticmethod
     def getMoves(grid):
