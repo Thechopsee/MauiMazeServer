@@ -1,3 +1,4 @@
+import json
 class GameRecord:   
     records=[]
     def __init__(self, gr_id, maze_id, user_id, time_in_milliseconds, hit_walls_count, cell_path_string):
