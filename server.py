@@ -41,7 +41,7 @@ def loadRecord():
     data = request.get_json()
     id = data.get('mazeID')
     result=RecordRepository.loadRecordsbyMaze(id)
-    response = json.dumps([record.__dict__ for record in result])
+    response = json.dumps([record.to_dict() for record in result])
     status_code = 200
     return response, status_code
 
@@ -50,7 +50,7 @@ def loadRecordbyuser():
     data = request.get_json()
     id = data.get('userID')
     result=RecordRepository.loadRecordsbyUser(id)
-    response = json.dumps([record.__dict__ for record in result])
+    response = json.dumps([record.to_dict()for record in result])
     status_code = 200
     print(response)
     return response, status_code
