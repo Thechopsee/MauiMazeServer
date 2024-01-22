@@ -52,6 +52,7 @@ def loadRecordbyuser():
     result=RecordRepository.loadRecordsbyUser(id)
     response = json.dumps([record.__dict__ for record in result])
     status_code = 200
+    print(response)
     return response, status_code
 
 @app.route('/loadMazeCount', methods=['POST'])
