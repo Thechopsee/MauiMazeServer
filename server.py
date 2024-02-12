@@ -20,8 +20,8 @@ app = Flask(__name__)
 def saveMaze():
     data = request.get_json()
     id = data.get('userID')
-    mazedto = json.loads(data.get('mazedto'))
-    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["StartCell"],mazedto["EndCell"],mazedto["Size"],database,adapter)
+    mazedto = data.get('mazedto')
+    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"],database,adapter)
     upredges=[]
     for edge in mazedto['edges']:
         tupled=(mazeid,edge['Cell1'],edge['Cell2'])
@@ -61,7 +61,7 @@ def loadRecordbyuser():
 def loadMazeCount():
     data = request.get_json()
     id = data.get('userID')
-    result=MazeRepository.getMazeCount(id,database,adapter)
+    result=MazeRepository.getMazeCount(id,database,adapter)[0]
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code

@@ -23,7 +23,7 @@ class SqliteAdapter(DatabaseAdapter):
         if(res is None):
             return -1
         else:
-            return(res.fetchone())
+            return res.fetchone()
     def getMany(self,database,sql):
         con = sqlite3.connect(database)
         cur = con.cursor()
