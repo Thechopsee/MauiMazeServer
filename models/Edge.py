@@ -7,6 +7,6 @@ class Edge:
 
     def serialize(self):
         return {
-            'Cell1': self.source,
-            'Cell2': self.target,
+            'Cell1': self.Cell1,
+            'Cell2': self.Cell2,
         }

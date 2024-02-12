@@ -18,10 +18,13 @@ class MazeRepository:
         res=adapter.getMany(database,sql)
         edges=[]
         for x in res :
-            edges.append(Edge(x[0],x[1]))
+            edges.append(Edge(x[2],x[3]))
         sql="SELECT * FROM Maze WHERE ID="+str(id)
+        serialized_edges=[]
         resmaze=adapter.getOne(database,sql)
-        mazedto= {'size':resmaze[6],'startCell':resmaze[4],'endCell':resmaze[5],'edges':edges}
+        for edge in edges:
+                serialized_edges.append(edge.serialize())
+        mazedto= {'size':resmaze[6],'startCell':resmaze[4],'endCell':resmaze[5],'edges':serialized_edges}
         return mazedto
     @staticmethod
     def getMazeList(id,database,adapter):
