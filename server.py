@@ -13,6 +13,7 @@ from databaseServices.databaseAdapter import DatabaseAdapter
 from databaseServices.sqliteAdapter import SqliteAdapter
 import os
 
+
 app = Flask(__name__)
 
 @app.route('/saveMaze', methods=['POST'])
@@ -25,7 +26,6 @@ def saveMaze():
     for edge in mazedto['edges']:
         tupled=(mazeid,edge['Cell1'],edge['Cell2'])
         upredges.append((tupled))
-    print(upredges)
     MazeRepository.saveEdgeToDatabase(upredges,database,adapter)
     response = {'message': id}
     status_code = 200
@@ -35,7 +35,7 @@ def loadMaze():
     data = request.get_json()
     id = data.get('mazeID')
     result=MazeRepository.getMaze(id,database,adapter)
-    response =  {'message': result}
+    response =  result
     status_code = 200
     return jsonify(response), status_code
 

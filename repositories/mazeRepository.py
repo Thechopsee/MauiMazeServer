@@ -1,5 +1,7 @@
 import sqlite3 
 import datetime
+from models.Maze import Maze
+from models.Edge import Edge
 class MazeRepository:
     @staticmethod
     def saveEdgeToDatabase(edge,database,adapter):
@@ -13,7 +15,14 @@ class MazeRepository:
     @staticmethod
     def getMaze(id,database,adapter):
         sql="SELECT * FROM Edge WHERE MazeID="+str(id)
-        return adapter.getMany(database,sql)
+        res=adapter.getMany(database,sql)
+        edges=[]
+        for x in res :
+            edges.append(Edge(x[0],x[1]))
+        sql="SELECT * FROM Maze WHERE ID="+str(id)
+        resmaze=adapter.getOne(database,sql)
+        mazedto= {'size':resmaze[6],'startCell':resmaze[4],'endCell':resmaze[5],'edges':edges}
+        return mazedto
     @staticmethod
     def getMazeList(id,database,adapter):
         sql="SELECT * FROM Maze WHERE UserID="+str(id)
