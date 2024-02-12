@@ -1,5 +1,5 @@
 import datetime
-from Edge import Edge
+from models.Edge import Edge
 class Maze:
     ID: int
     UserID :int 
