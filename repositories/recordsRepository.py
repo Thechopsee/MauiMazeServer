@@ -23,7 +23,7 @@ class RecordRepository:
         gameRecords=[]
         for x in fetched:
             gr=GameRecord(x[0],x[1],x[2],x[3],x[4],x[5])
-            fetchedmoves=RecordRepository.getMoves(x[0],database)
+            fetchedmoves=RecordRepository.getMoves(x[0],database,adapter)
             for y in fetchedmoves:
                 gr.records.append(MoveRecord(y[0],y[1],y[2],y[3],y[4]))
             gameRecords.append(gr)
@@ -35,7 +35,7 @@ class RecordRepository:
         gameRecords=[]
         for x in fetched:
             gr=GameRecord(x[0],x[1],x[2],x[3],x[4],x[5])
-            fetchedmoves=RecordRepository.getMoves(x[0],database)
+            fetchedmoves=RecordRepository.getMoves(x[0],database,adapter)
             for y in fetchedmoves:
                 gr.records.append(MoveRecord(y[0],y[1],y[2],y[3],y[4]))
             gameRecords.append(gr)
@@ -47,7 +47,7 @@ class RecordRepository:
         gameRecords=[]
         for x in fetched:
             gr=GameRecord(x[0],x[1],x[2],x[3],x[4],x[5])
-            fetchedmoves=RecordRepository.getMoves(x[0],database)
+            fetchedmoves=RecordRepository.getMoves(x[0],database,adapter)
             for y in fetchedmoves:
                 gr.records.append(MoveRecord(y[0],y[1],y[2],y[3],y[4]))
             gameRecords.append(gr)
