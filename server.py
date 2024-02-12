@@ -87,6 +87,7 @@ def login():
         response = {'message': -1}
         status_code = 401
     else :
+        id=res[0]
         response = {'message': id}
         status_code = 200        
 
