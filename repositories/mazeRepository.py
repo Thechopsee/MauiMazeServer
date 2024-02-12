@@ -5,10 +5,10 @@ class MazeRepository:
     def saveEdgeToDatabase(edge,database,adapter):
         adapter.saveMany(database,"INSERT INTO Edge (MazeID,Cell1,Cell2) VALUES (?,?,?)",edge)
     @staticmethod
-    def saveMazetoDatabase(userid,type,database,adapter):
+    def saveMazetoDatabase(userid,type,StartCell,EndCell,Size,database,adapter):
         now = datetime.datetime.now()
         formatted_datetime = now.strftime("%Y-%m-%dT%H:%M:%S")
-        last_id = adapter.saveOne(database,"INSERT INTO Maze (UserID,Type,CreationDate) VALUES (?,?,?)",(userid,type,formatted_datetime))
+        last_id = adapter.saveOne(database,"INSERT INTO Maze (UserID,Type,CreationDate,StartCell,EndCell,Size) VALUES (?,?,?,?,?,?)",(userid,type,formatted_datetime,StartCell,EndCell,Size))
         return last_id
     @staticmethod
     def getMaze(id,database,adapter):

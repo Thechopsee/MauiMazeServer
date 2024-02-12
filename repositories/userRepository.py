@@ -2,26 +2,16 @@ import sqlite3
 
 class UserRepository:
     @staticmethod
-    def trytoLoginDatabase(email,password,database):
-        con = sqlite3.connect(database)
-        cur = con.cursor()
-        res = cur.execute("SELECT ID FROM User WHERE email='"+email+"' and password='"+password+"'")
-        data = res.fetchone()
-        if(data==None):
-            return [-1]
-        else:
-            return data
+    def trytoLoginDatabase(email,password,database,adapter):
+        sql="SELECT ID FROM User WHERE email='"+email+"' and password='"+password+"'"
+        return adapter.getOne(database,sql)
             
     @staticmethod
-    def registerUser(email,password,database):
-        con = sqlite3.connect(database)
-        cur = con.cursor()
-        cur.execute("INSERT INTO User (email,password) VALUES (?,?)",(email,password))
-        con.commit()
+    def registerUser(email,password,database,adapter):
+        sql="INSERT INTO User (email,password) VALUES (?,?)"
+        return adapter.saveOne(database,sql,(email,password))
 
     @staticmethod
-    def deleteUser(email,password,database):
-        con = sqlite3.connect(database)
-        cur = con.cursor()
-        cur.execute("DELETE FROM User WHERE email=? AND password=?;",(email,password))
-        con.commit()
+    def deleteUser(email,password,database,adapter):
+        sql="DELETE FROM User WHERE email=? AND password=?;"
+        adapter.saveOne(database,sql,(email,password))
