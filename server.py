@@ -82,14 +82,13 @@ def login():
     password = data.get('password')
     print(email)
     print(password)
-    id=UserRepository.trytoLoginDatabase(email,password,database,adapter)[0]
-
-    if id>0:
-        response = {'message': id}
-        status_code = 200
-    else:
+    res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
+    if(res is None):
         response = {'message': -1}
         status_code = 401
+    else :
+        response = {'message': id}
+        status_code = 200        
 
     return jsonify(response), status_code
     
