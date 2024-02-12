@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify
 import sqlite3 
 import datetime
+import sys
 import json
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
 from repositories.VCRepository import VCRepository
 from repositories.recordsRepository import RecordRepository
 from tools.VerificationCodeGenerator import VerificationCodeGenerator
+
+from databaseServices.databaseAdapter import DatabaseAdapter
+from databaseServices.sqliteAdapter import SqliteAdapter
 import os
 
 app = Flask(__name__)
@@ -15,15 +19,14 @@ app = Flask(__name__)
 def saveMaze():
     data = request.get_json()
     id = data.get('userID')
-    edges = data.get('edges')
-    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic")
-    print(edges[0]['Cell1'])
+    mazedto = json.loads(data.get('mazedto'))
+    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["StartCell"],mazedto["EndCell"],mazedto["Size"],database,adapter)
     upredges=[]
-    for edge in edges:
+    for edge in mazedto['edges']:
         tupled=(mazeid,edge['Cell1'],edge['Cell2'])
         upredges.append((tupled))
     print(upredges)
-    MazeRepository.saveEdgeToDatabase(upredges)
+    MazeRepository.saveEdgeToDatabase(upredges,database,adapter)
     response = {'message': id}
     status_code = 200
     return jsonify(response), status_code
@@ -31,7 +34,7 @@ def saveMaze():
 def loadMaze():
     data = request.get_json()
     id = data.get('mazeID')
-    result=MazeRepository.getMaze(id)
+    result=MazeRepository.getMaze(id,database,adapter)
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
@@ -40,7 +43,7 @@ def loadMaze():
 def loadRecord():
     data = request.get_json()
     id = data.get('mazeID')
-    result=RecordRepository.loadRecordsbyMaze(id)
+    result=RecordRepository.loadRecordsbyMaze(id,database,adapter)
     response = json.dumps([record.to_dict() for record in result])
     status_code = 200
     return response, status_code
@@ -49,7 +52,7 @@ def loadRecord():
 def loadRecordbyuser():
     data = request.get_json()
     id = data.get('userID')
-    result=RecordRepository.loadRecordsbyUser(id)
+    result=RecordRepository.loadRecordsbyUser(id,database,adapter)
     response = json.dumps([record.to_dict()for record in result])
     status_code = 200
     return response, status_code
@@ -58,7 +61,7 @@ def loadRecordbyuser():
 def loadMazeCount():
     data = request.get_json()
     id = data.get('userID')
-    result=MazeRepository.getMazeCount(id)
+    result=MazeRepository.getMazeCount(id,database,adapter)
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
@@ -67,7 +70,7 @@ def loadMazeCount():
 def loadMazeList():
     data = request.get_json()
     id = data.get('userID')
-    res=MazeRepository.getMazeList(id)
+    res=MazeRepository.getMazeList(id,database,adapter)
     response =  {'descriptions': res}
     status_code = 200
     return jsonify(response), status_code
@@ -79,7 +82,7 @@ def login():
     password = data.get('password')
     print(email)
     print(password)
-    id=UserRepository.trytoLoginDatabase(email,password)[0]
+    id=UserRepository.trytoLoginDatabase(email,password,database,adapter)[0]
 
     if id>0:
         response = {'message': id}
@@ -96,10 +99,10 @@ def register():
     email = data.get('email')
     password = data.get('password')
     code = data.get('code')
-    result=VCRepository.isCodeTaken(code)
+    result=VCRepository.isCodeTaken(code,database,adapter)
     print(result)
     if(result==0):
-        UserRepository.registerUser(email,password)
+        UserRepository.registerUser(email,password,database,adapter)
         VCRepository.updateCode(code)
         return "ok",200
     elif(result==1):
@@ -111,13 +114,13 @@ def register():
 @app.route('/createCode', methods=['GET'])
 def createCode():
     kod=VerificationCodeGenerator.generate_verification_code()
-    VCRepository.save_verification_code(kod)
+    VCRepository.save_verification_code(kod,database,adapter)
     return "ok",200
 
 @app.route('/saveRecord', methods=['POST'])
 def saveRecord():
     record = request.get_json()
-    grID=RecordRepository.saveRecordtoDatabase(record)
+    grID=RecordRepository.saveRecordtoDatabase(record,database,adapter)
     formatedRecords=[]
     print(record["records"])
     for move in record["records"]:
@@ -126,10 +129,15 @@ def saveRecord():
             hw=1
         tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID)
         formatedRecords.append((tupled))
-    RecordRepository.saveMovesToDatabase(formatedRecords)
+    RecordRepository.saveMovesToDatabase(formatedRecords,database,adapter)
     return "ok",200
 
+database=os.environ.get('database_connection_string')
+adapter : DatabaseAdapter
 if __name__ == '__main__':
     ip = os.environ.get('IP')
     sport = os.environ.get('port')
+    db_type=os.environ.get('database_type')
+    if(db_type == 'SQLITE'):
+        adapter=SqliteAdapter()
     app.run(host=ip, port=sport)

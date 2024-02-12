@@ -1,6 +1,8 @@
 {
     "python.analysis.extraPaths": [
         "./repositories",
-        "./models"
+        "./models",
+        "./tools",
+        "./databaseServices"
     ]
 }
