@@ -126,7 +126,7 @@ def saveRecord():
         hw=0
         if(move["hitWall"] == 'True'):
             hw=1
-        tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID)
+        tupled=(move["percentagex"],move["percentagey"],hw,move["deltaTinMilisec"],grID,move['cell'])
         formatedRecords.append((tupled))
     RecordRepository.saveMovesToDatabase(formatedRecords,database,adapter)
     return "ok",200

@@ -7,7 +7,7 @@ from MoveRecord import MoveRecord
 class RecordRepository:
     @staticmethod
     def saveMovesToDatabase(moves,database,adapter):
-        sql="INSERT INTO MoveRecord (percentagex,percentagey,hitwall,deltaTime,grID) VALUES (?,?,?,?,?)"
+        sql="INSERT INTO MoveRecord (percentagex,percentagey,hitwall,deltaTime,grID,cell) VALUES (?,?,?,?,?,?)"
         adapter.saveMany(database,sql,moves)
     @staticmethod
     def saveRecordtoDatabase(record,database,adapter):
