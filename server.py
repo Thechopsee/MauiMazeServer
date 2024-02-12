@@ -122,7 +122,6 @@ def saveRecord():
     record = request.get_json()
     grID=RecordRepository.saveRecordtoDatabase(record,database,adapter)
     formatedRecords=[]
-    print(record["records"])
     for move in record["records"]:
         hw=0
         if(move["hitWall"] == 'True'):
