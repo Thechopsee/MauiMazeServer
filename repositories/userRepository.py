@@ -6,16 +6,25 @@ class UserRepository:
         sql="SELECT * FROM User WHERE email='"+email+"' and password='"+password+"'"
         res=adapter.getOne(database,sql)
         if(res is  None):
-            response = {'id': -1,'role': -1,'name':'-1'}
+            response = {'id': -1,'role': -1,'email':'-1','firstname':'a','lastname':'a' }
         else:
             role=0
             if(res[3]==1):
                 role=2
             elif(res[4]==1):
                 role=1
-            response = {'id': res[0],'role': role,'name':res[1]}
+            response = {'id': res[0],'role': role,'email':res[1],'firstname':res[5],'lastname':res[6]}
         return response
-            
+    @staticmethod        
+    def getUsersForResearcher(database,adapter):
+        sql="SELECT * FROM User WHERE researcher=0 and admin=0"
+        res=adapter.getMany(database,sql)
+        users=[]
+        for x in res:
+            role=0
+            userDTO = {'id': x[0],'role': role,'email':x[1],'firstname':x[5],'lastname':x[6]}
+            users.append(userDTO)
+        return users
     @staticmethod
     def registerUser(email,password,database,adapter):
         sql="INSERT INTO User (email,password) VALUES (?,?)"
