@@ -85,8 +85,7 @@ def login():
         response = res
         status_code = 401
     else :
-        id=res[0]
-        response = res
+        response=res
         status_code = 200        
 
     return jsonify(response), status_code
