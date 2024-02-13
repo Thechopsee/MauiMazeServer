@@ -129,13 +129,13 @@ def saveRecord():
     RecordRepository.saveMovesToDatabase(formatedRecords,database,adapter)
     return "ok",200
 
-app.route('/loadUsers', methods=['POST'])
+@app.route('/loadUsers', methods=['POST'])
 def loadUsers():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
     res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
-    if(res['id']==-1 or res['researcher']!=1):
+    if(res['id']==-1 or res['role']<1):
         return "unauthorized",401
     else:
         users=UserRepository.getUsersForResearcher(database,adapter)
