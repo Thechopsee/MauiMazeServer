@@ -80,15 +80,13 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    print(email)
-    print(password)
     res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
-    if(res is None):
-        response = {'message': -1}
+    if(res['id']==-1):
+        response = res
         status_code = 401
     else :
         id=res[0]
-        response = {'message': id}
+        response = res
         status_code = 200        
 
     return jsonify(response), status_code

@@ -3,8 +3,18 @@ import sqlite3
 class UserRepository:
     @staticmethod
     def trytoLoginDatabase(email,password,database,adapter):
-        sql="SELECT ID FROM User WHERE email='"+email+"' and password='"+password+"'"
-        return adapter.getOne(database,sql)
+        sql="SELECT * FROM User WHERE email='"+email+"' and password='"+password+"'"
+        res=adapter.getOne(database,sql)
+        if(res is  None):
+            response = {'id': -1,'role': -1}
+        else:
+            role=0
+            if(res[3]==1):
+                role=2
+            elif(res[4]==1):
+                role=1
+            response = {'id': res[0],'role': role}
+        return response
             
     @staticmethod
     def registerUser(email,password,database,adapter):
