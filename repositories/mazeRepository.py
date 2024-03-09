@@ -41,7 +41,7 @@ class MazeRepository:
         sql="SELECT Count(*) FROM Maze WHERE UserID="+str(id)
         return adapter.getOne(sql) 
     @staticmethod
-    def countMazes(database) ->int:
+    def countMazes() ->int:
         adapter=ConnectionProvider().adapter
         sql="SELECT COUNT(*) FROM Maze"
         return adapter.getOne(sql) 
