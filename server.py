@@ -8,6 +8,7 @@ from tools.VerificationCodeGenerator import VerificationCodeGenerator
 
 from databaseServices.databaseAdapter import DatabaseAdapter
 from databaseServices.sqliteAdapter import SqliteAdapter
+from databaseServices.connectionProvider import ConnectionProvider
 import os
 
 
@@ -126,19 +127,9 @@ def create_record():
 
 
 
-database=os.environ.get('database_connection_string')
-adapter=None
-
-def initialize_global_object():
-    global adapter
-    db_type=os.environ.get('database_type')
-    if(db_type == 'SQLITE'):
-        adapter=SqliteAdapter()
-
-
+database=ConnectionProvider().database
+adapter=ConnectionProvider().adapter
 if __name__ == '__main__':
-    
     ip = os.environ.get('IP')
     sport = os.environ.get('port')
-    initialize_global_object()
     app.run(host=ip, port=sport)
