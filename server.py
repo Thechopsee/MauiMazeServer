@@ -127,11 +127,13 @@ def create_record():
 
 
 database=os.environ.get('database_connection_string')
-adapter : DatabaseAdapter
+
 if __name__ == '__main__':
+    
     ip = os.environ.get('IP')
     sport = os.environ.get('port')
     db_type=os.environ.get('database_type')
     if(db_type == 'SQLITE'):
+        global adapter
         adapter=SqliteAdapter()
     app.run(host=ip, port=sport)
