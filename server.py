@@ -1,7 +1,4 @@
 from flask import Flask, request, jsonify
-import sqlite3 
-import datetime
-import sys
 import json
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
@@ -21,18 +18,18 @@ def create_maze():
     data = request.get_json()
     id = data.get('userID')
     mazedto = data.get('mazedto')
-    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"],database,adapter)
+    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"],database)
     upredges=[]
     for edge in mazedto['edges']:
         tupled=(mazeid,edge['Cell1'],edge['Cell2'])
         upredges.append((tupled))
-    MazeRepository.saveEdgeToDatabase(upredges,database,adapter)
+    MazeRepository.saveEdgeToDatabase(upredges,database)
     response = {'message': id}
     status_code = 200
     return jsonify(response), status_code
 @app.route('/mazes/<maze_id>', methods=['POST'])
 def get_maze(maze_id):    
-    result=MazeRepository.getMaze(maze_id,database,adapter)
+    result=MazeRepository.getMaze(maze_id,database)
     response =  result
     status_code = 200
     return jsonify(response), status_code
@@ -53,14 +50,14 @@ def loadRecordbyuser(user_id):
 
 @app.route('/users/<user_id>/mcount', methods=['POST'])
 def get_maze_count(user_id):
-    result=MazeRepository.getMazeCount(user_id,database,adapter)[0]
+    result=MazeRepository.getMazeCount(user_id,database)[0]
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
 
 @app.route('/users/<user_id>/mazes', methods=['POST'])
 def get_maze_list(user_id):
-    res=MazeRepository.getMazeList(user_id,database,adapter)
+    res=MazeRepository.getMazeList(user_id,database)
     response =  {'descriptions': res}
     status_code = 200
     return jsonify(response), status_code
