@@ -1,10 +1,12 @@
 import sqlite3 
+from databaseServices.connectionProvider import ConnectionProvider
 
 class UserRepository:
     @staticmethod
-    def trytoLoginDatabase(email,password,database,adapter):
+    def trytoLoginDatabase(email,password):
         sql="SELECT * FROM User WHERE email='"+email+"' and password='"+password+"'"
-        res=adapter.getOne(database,sql)
+        adapter=ConnectionProvider().adapter
+        res=adapter.getOne(sql)
         if(res is  None):
             response = {'id': -1,'role': -1,'email':'-1','firstname':'a','lastname':'a' }
         else:
@@ -16,9 +18,10 @@ class UserRepository:
             response = {'id': res[0],'role': role,'email':res[1],'firstname':res[5],'lastname':res[6]}
         return response
     @staticmethod        
-    def getUsersForResearcher(database,adapter):
+    def getUsersForResearcher():
         sql="SELECT * FROM User WHERE researcher=0 and admin=0"
-        res=adapter.getMany(database,sql)
+        adapter=ConnectionProvider().adapter
+        res=adapter.getMany(sql)
         users=[]
         for x in res:
             role=0
@@ -26,11 +29,13 @@ class UserRepository:
             users.append(userDTO)
         return users
     @staticmethod
-    def registerUser(email,password,database,adapter):
+    def registerUser(email,password):
         sql="INSERT INTO User (email,password) VALUES (?,?)"
-        return adapter.saveOne(database,sql,(email,password))
+        adapter=ConnectionProvider().adapter
+        return adapter.saveOne(sql,(email,password))
 
     @staticmethod
-    def deleteUser(email,password,database,adapter):
+    def deleteUser(email,password):
         sql="DELETE FROM User WHERE email=? AND password=?;"
-        adapter.saveOne(database,sql,(email,password))
+        adapter=ConnectionProvider().adapter
+        adapter.saveOne(sql,(email,password))

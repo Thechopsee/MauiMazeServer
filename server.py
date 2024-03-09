@@ -37,14 +37,14 @@ def get_maze(maze_id):
 
 @app.route('/mazes/<maze_id>/records', methods=['POST'])
 def get_records_by_maze(maze_id):
-    result=RecordRepository.loadRecordsbyMaze(maze_id,database,adapter)
+    result=RecordRepository.loadRecordsbyMaze(maze_id,database)
     response = json.dumps([record.to_dict() for record in result])
     status_code = 200
     return response, status_code
 
 @app.route('/users/<user_id>/records', methods=['POST'])
 def loadRecordbyuser(user_id):
-    result=RecordRepository.loadRecordsbyUser(user_id,database,adapter)
+    result=RecordRepository.loadRecordsbyUser(user_id,database)
     response = json.dumps([record.to_dict()for record in result])
     status_code = 200
     return response, status_code
@@ -68,11 +68,11 @@ def get_users_list():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
+    res=UserRepository.trytoLoginDatabase(email,password,database)
     if(res['id']==-1 or res['role']<1):
         return "unauthorized",401
     else:
-        users=UserRepository.getUsersForResearcher(database,adapter)
+        users=UserRepository.getUsersForResearcher(database)
         return jsonify(users), 200
     
 @app.route('/login', methods=['POST'])
@@ -80,7 +80,7 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
+    res=UserRepository.trytoLoginDatabase(email,password,database)
     if(res['id']==-1):
         response = res
         status_code = 401
@@ -96,10 +96,10 @@ def register():
     email = data.get('email')
     password = data.get('password')
     code = data.get('code')
-    result=VCRepository.isCodeTaken(code,database,adapter)
+    result=VCRepository.isCodeTaken(code,database)
     print(result)
     if(result==0):
-        UserRepository.registerUser(email,password,database,adapter)
+        UserRepository.registerUser(email,password,database)
         VCRepository.updateCode(code)
         return "ok",200
     elif(result==1):
@@ -111,18 +111,18 @@ def register():
 @app.route('/codes', methods=['GET'])
 def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
-    VCRepository.save_verification_code(kod,database,adapter)
+    VCRepository.save_verification_code(kod,database)
     return "ok",200
 
 @app.route('/records', methods=['POST'])
 def create_record():
     record = request.get_json()
-    grID=RecordRepository.saveRecordtoDatabase(record,database,adapter)
+    grID=RecordRepository.saveRecordtoDatabase(record,database)
     formatedRecords=[]
     for move in record["records"]:
         tupled=(move["percentagex"],move["percentagey"],move["hitWall"],move["deltaTinMilisec"],grID,move['cell'])
         formatedRecords.append((tupled))
-    RecordRepository.saveMovesToDatabase(formatedRecords,database,adapter)
+    RecordRepository.saveMovesToDatabase(formatedRecords,database)
     return "ok",200
 
 

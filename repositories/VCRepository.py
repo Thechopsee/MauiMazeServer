@@ -1,23 +1,27 @@
 import sqlite3
-
+from databaseServices.connectionProvider import ConnectionProvider
 class VCRepository:
 	@staticmethod
-	def count_of_unused(database,adapter):
+	def count_of_unused():
 		sql='Select Count(*) from VerificationCodes WHERE used=0'
-		return adapter.getOne(database,sql)
+		adapter=ConnectionProvider().adapter
+		return adapter.getOne(sql)
 	@staticmethod
-	def save_verification_code(code,database,adapter):
+	def save_verification_code(code):
 		sql='INSERT INTO VerificationCodes (code) VALUES (?)', code
-		inserted_id = adapter.saveOne(database,sql,code)
+		adapter=ConnectionProvider().adapter
+		inserted_id = adapter.saveOne(sql,code)
 		return inserted_id
 		
 	@staticmethod
-	def updateCode(code,database,adapter):
+	def updateCode(code):
 		sql="UPDATE VerificationCodes SET used=1 WHERE code='"+str(code)+"'"
-		adapter.getOne(database,sql)
+		adapter=ConnectionProvider().adapter
+		adapter.getOne(sql)
 		
 	@staticmethod
-	def isCodeTaken(codee,database,adapter):
+	def isCodeTaken(codee):
 		
 		sql="SELECT used FROM VerificationCodes WHERE code='"+codee+"'"
-		return adapter.getOne(database,sql)
+		adapter=ConnectionProvider().adapter
+		return adapter.getOne(sql)
