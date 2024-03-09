@@ -16,8 +16,8 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/saveMaze', methods=['POST'])
-def saveMaze():
+@app.route('/mazes', methods=['POST'])
+def create_maze():
     data = request.get_json()
     id = data.get('userID')
     mazedto = data.get('mazedto')
@@ -30,51 +30,53 @@ def saveMaze():
     response = {'message': id}
     status_code = 200
     return jsonify(response), status_code
-@app.route('/loadMaze', methods=['POST'])
-def loadMaze():
-    data = request.get_json()
-    id = data.get('mazeID')
-    result=MazeRepository.getMaze(id,database,adapter)
+@app.route('/mazes/<maze_id>', methods=['POST'])
+def get_maze(maze_id):    
+    result=MazeRepository.getMaze(maze_id,database,adapter)
     response =  result
     status_code = 200
     return jsonify(response), status_code
 
-@app.route('/loadRecordByMaze', methods=['POST'])
-def loadRecord():
-    data = request.get_json()
-    id = data.get('mazeID')
-    result=RecordRepository.loadRecordsbyMaze(id,database,adapter)
+@app.route('/mazes/<maze_id>/records', methods=['POST'])
+def get_records_by_maze(maze_id):
+    result=RecordRepository.loadRecordsbyMaze(maze_id,database,adapter)
     response = json.dumps([record.to_dict() for record in result])
     status_code = 200
     return response, status_code
 
-@app.route('/loadRecordByUser', methods=['POST'])
-def loadRecordbyuser():
-    data = request.get_json()
-    id = data.get('userID')
-    result=RecordRepository.loadRecordsbyUser(id,database,adapter)
+@app.route('/users/<user_id>/records', methods=['POST'])
+def loadRecordbyuser(user_id):
+    result=RecordRepository.loadRecordsbyUser(user_id,database,adapter)
     response = json.dumps([record.to_dict()for record in result])
     status_code = 200
     return response, status_code
 
-@app.route('/loadMazeCount', methods=['POST'])
-def loadMazeCount():
-    data = request.get_json()
-    id = data.get('userID')
-    result=MazeRepository.getMazeCount(id,database,adapter)[0]
+@app.route('/users/<user_id>/mcount', methods=['POST'])
+def get_maze_count(user_id):
+    result=MazeRepository.getMazeCount(user_id,database,adapter)[0]
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
 
-@app.route('/loadMazeList', methods=['POST'])
-def loadMazeList():
-    data = request.get_json()
-    id = data.get('userID')
-    res=MazeRepository.getMazeList(id,database,adapter)
+@app.route('/users/<user_id>/mazes', methods=['POST'])
+def get_maze_list(user_id):
+    res=MazeRepository.getMazeList(user_id,database,adapter)
     response =  {'descriptions': res}
     status_code = 200
     return jsonify(response), status_code
 
+@app.route('/users', methods=['POST'])
+def get_users_list():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
+    if(res['id']==-1 or res['role']<1):
+        return "unauthorized",401
+    else:
+        users=UserRepository.getUsersForResearcher(database,adapter)
+        return jsonify(users), 200
+    
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -108,14 +110,14 @@ def register():
         return "server error",500
     
 
-@app.route('/createCode', methods=['GET'])
-def createCode():
+@app.route('/codes', methods=['GET'])
+def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
     VCRepository.save_verification_code(kod,database,adapter)
     return "ok",200
 
-@app.route('/saveRecord', methods=['POST'])
-def saveRecord():
+@app.route('/records', methods=['POST'])
+def create_record():
     record = request.get_json()
     grID=RecordRepository.saveRecordtoDatabase(record,database,adapter)
     formatedRecords=[]
@@ -125,17 +127,7 @@ def saveRecord():
     RecordRepository.saveMovesToDatabase(formatedRecords,database,adapter)
     return "ok",200
 
-@app.route('/loadUsers', methods=['POST'])
-def loadUsers():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password,database,adapter)
-    if(res['id']==-1 or res['role']<1):
-        return "unauthorized",401
-    else:
-        users=UserRepository.getUsersForResearcher(database,adapter)
-        return jsonify(users), 200
+
 
 database=os.environ.get('database_connection_string')
 adapter : DatabaseAdapter
