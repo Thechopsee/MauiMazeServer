@@ -19,46 +19,46 @@ def create_maze():
     data = request.get_json()
     id = data.get('userID')
     mazedto = data.get('mazedto')
-    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"],database)
+    mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"])
     upredges=[]
     for edge in mazedto['edges']:
         tupled=(mazeid,edge['Cell1'],edge['Cell2'])
         upredges.append((tupled))
-    MazeRepository.saveEdgeToDatabase(upredges,database)
+    MazeRepository.saveEdgeToDatabase(upredges)
     response = {'message': id}
     status_code = 200
     return jsonify(response), status_code
 @app.route('/mazes/<maze_id>', methods=['POST'])
 def get_maze(maze_id):    
-    result=MazeRepository.getMaze(maze_id,database)
+    result=MazeRepository.getMaze(maze_id)
     response =  result
     status_code = 200
     return jsonify(response), status_code
 
 @app.route('/mazes/<maze_id>/records', methods=['POST'])
 def get_records_by_maze(maze_id):
-    result=RecordRepository.loadRecordsbyMaze(maze_id,database)
+    result=RecordRepository.loadRecordsbyMaze(maze_id)
     response = json.dumps([record.to_dict() for record in result])
     status_code = 200
     return response, status_code
 
 @app.route('/users/<user_id>/records', methods=['POST'])
 def loadRecordbyuser(user_id):
-    result=RecordRepository.loadRecordsbyUser(user_id,database)
+    result=RecordRepository.loadRecordsbyUser(user_id)
     response = json.dumps([record.to_dict()for record in result])
     status_code = 200
     return response, status_code
 
 @app.route('/users/<user_id>/mcount', methods=['POST'])
 def get_maze_count(user_id):
-    result=MazeRepository.getMazeCount(user_id,database)[0]
+    result=MazeRepository.getMazeCount(user_id)[0]
     response =  {'message': result}
     status_code = 200
     return jsonify(response), status_code
 
 @app.route('/users/<user_id>/mazes', methods=['POST'])
 def get_maze_list(user_id):
-    res=MazeRepository.getMazeList(user_id,database)
+    res=MazeRepository.getMazeList(user_id)
     response =  {'descriptions': res}
     status_code = 200
     return jsonify(response), status_code
@@ -68,11 +68,11 @@ def get_users_list():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password,database)
+    res=UserRepository.trytoLoginDatabase(email,password)
     if(res['id']==-1 or res['role']<1):
         return "unauthorized",401
     else:
-        users=UserRepository.getUsersForResearcher(database)
+        users=UserRepository.getUsersForResearcher()
         return jsonify(users), 200
     
 @app.route('/login', methods=['POST'])
@@ -80,7 +80,7 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password,database)
+    res=UserRepository.trytoLoginDatabase(email,password)
     if(res['id']==-1):
         response = res
         status_code = 401
@@ -96,10 +96,10 @@ def register():
     email = data.get('email')
     password = data.get('password')
     code = data.get('code')
-    result=VCRepository.isCodeTaken(code,database)
+    result=VCRepository.isCodeTaken(code)
     print(result)
     if(result==0):
-        UserRepository.registerUser(email,password,database)
+        UserRepository.registerUser(email,password)
         VCRepository.updateCode(code)
         return "ok",200
     elif(result==1):
@@ -111,24 +111,23 @@ def register():
 @app.route('/codes', methods=['GET'])
 def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
-    VCRepository.save_verification_code(kod,database)
+    VCRepository.save_verification_code(kod)
     return "ok",200
 
 @app.route('/records', methods=['POST'])
 def create_record():
     record = request.get_json()
-    grID=RecordRepository.saveRecordtoDatabase(record,database)
+    grID=RecordRepository.saveRecordtoDatabase(record)
     formatedRecords=[]
     for move in record["records"]:
         tupled=(move["percentagex"],move["percentagey"],move["hitWall"],move["deltaTinMilisec"],grID,move['cell'])
         formatedRecords.append((tupled))
-    RecordRepository.saveMovesToDatabase(formatedRecords,database)
+    RecordRepository.saveMovesToDatabase(formatedRecords)
     return "ok",200
 
 
 
-database=ConnectionProvider().database
-adapter=ConnectionProvider().adapter
+
 if __name__ == '__main__':
     ip = os.environ.get('IP')
     sport = os.environ.get('port')
