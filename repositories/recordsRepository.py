@@ -12,10 +12,10 @@ class RecordRepository:
         adapter=ConnectionProvider().adapter
         adapter.saveMany(sql,moves)
     @staticmethod
-    def saveRecordtoDatabase(record,adapter):
+    def saveRecordtoDatabase(record):
         sql="INSERT INTO GameRecord (mazeID,userID,timeInMilliSeconds,hitWallsCount,cellPathString) VALUES (?,?,?,?,?)"
         data=(record.get("mazeID"),record.get("userID"),record.get("timeInMilliSeconds"),record.get("hitWallsCount"),record.get("cellPathString"))
-
+        adapter=ConnectionProvider().adapter
         last_id = adapter.saveOne(sql,data)
         return last_id
     @staticmethod
@@ -59,6 +59,7 @@ class RecordRepository:
         return gameRecords
 
     @staticmethod
-    def getMoves(grid,adapter):
+    def getMoves(grid):
+        adapter=ConnectionProvider().adapter
         sql="SELECT * FROM MoveRecord WHERE grID="+str(grid)
         return adapter.getMany(sql)
