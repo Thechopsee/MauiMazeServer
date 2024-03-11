@@ -10,6 +10,21 @@ class ATRepository:
         kod=VerificationCodeGenerator.generate_verification_code()
         current_timestamp = int(time.time())
         adapter=ConnectionProvider().adapter
-        sql="INSERT INTO AutorizationToken (token,userId,timestamp) VALUES(?,?,?)"
+        sql="INSERT INTO AT (token,userId,timestamp) VALUES(?,?,?)"
         adapter.saveOne(sql,(kod,id,current_timestamp))
         return kod
+
+    def checkToken(token):
+        sql=("Select * from AT where token='?'",token)
+        adapter=ConnectionProvider().adapter
+        res=adapter.getOne(sql)
+        
+        current_timestamp = int(time.time())
+        if(res is not None):
+                if(res[2]>current_timestamp+3600):
+                        return false
+                else:
+                        return true
+                
+        else:
+                return false;

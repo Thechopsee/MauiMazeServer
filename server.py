@@ -4,6 +4,7 @@ from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
 from repositories.VCRepository import VCRepository
 from repositories.recordsRepository import RecordRepository
+from repositories.autorizationTokens import ATRepository
 from tools.VerificationCodeGenerator import VerificationCodeGenerator
 
 from databaseServices.databaseAdapter import DatabaseAdapter
@@ -66,10 +67,9 @@ def get_maze_list(user_id):
 @app.route('/users', methods=['POST'])
 def get_users_list():
     data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-    res=UserRepository.trytoLoginDatabase(email,password)
-    if(res['id']==-1 or res['role']<1):
+    at = data.get('AT')
+    res=ATRepository.checkToken(2);
+    if(!res):
         return "unauthorized",401
     else:
         users=UserRepository.getUsersForResearcher()
