@@ -5,6 +5,7 @@ from GameRecord import GameRecord
 from MoveRecord import MoveRecord
 from databaseServices.connectionProvider import ConnectionProvider
 
+
 class RecordRepository:
     @staticmethod
     def saveMovesToDatabase(moves):
