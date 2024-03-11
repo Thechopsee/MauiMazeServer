@@ -16,7 +16,7 @@ class ATRepository:
         return kod
 
     def checkToken(token,role):
-        sql=("Select * from AT where token='?'",token)
+        sql="Select * from AT where token='"+token+"'"
         adapter=ConnectionProvider().adapter
         res=adapter.getOne(sql)
         from repositories.userRepository import UserRepository
