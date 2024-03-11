@@ -116,7 +116,9 @@ def create_codes():
 
 @app.route('/records', methods=['POST'])
 def create_record():
-    record = request.get_json()
+    data = request.get_json()
+    at = data.get('AT')
+    record= data.get('GR')
     grID=RecordRepository.saveRecordtoDatabase(record)
     formatedRecords=[]
     for move in record["records"]:
