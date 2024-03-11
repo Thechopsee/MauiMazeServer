@@ -68,8 +68,8 @@ def get_maze_list(user_id):
 def get_users_list():
     data = request.get_json()
     at = data.get('AT')
-    res=ATRepository.checkToken(2);
-    if(!res):
+    res=ATRepository.checkToken(at,2)
+    if(not res):
         return "unauthorized",401
     else:
         users=UserRepository.getUsersForResearcher()

@@ -31,6 +31,19 @@ class UserRepository:
             userDTO = {'id': x[0],'role': role,'email':x[1],'firstname':x[5],'lastname':x[6]}
             users.append(userDTO)
         return users
+    @staticmethod  
+    def getUserRole(id):
+        sql="Select admin,researcher from User where ID="+id
+        adapter=ConnectionProvider().adapter
+        res=adapter.getOne(sql)
+        role=1
+        if(res[0]==1):
+            role+=1
+        if(res[1]==1):
+            role+=1
+        return role
+
+
     @staticmethod
     def registerUser(email,password):
         sql="INSERT INTO User (email,password) VALUES (?,?)"
