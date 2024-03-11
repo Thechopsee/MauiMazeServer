@@ -33,7 +33,7 @@ class UserRepository:
         return users
     @staticmethod  
     def getUserRole(id):
-        sql="Select admin,researcher from User where ID="+id
+        sql="Select admin,researcher from User where ID="+str(id)
         adapter=ConnectionProvider().adapter
         res=adapter.getOne(sql)
         role=1
