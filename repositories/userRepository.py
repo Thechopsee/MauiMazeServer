@@ -1,21 +1,24 @@
 import sqlite3 
 from databaseServices.connectionProvider import ConnectionProvider
-
+from repositories.autorizationTokens import ATRepository
 class UserRepository:
     @staticmethod
     def trytoLoginDatabase(email,password):
         sql="SELECT * FROM User WHERE email='"+email+"' and password='"+password+"'"
         adapter=ConnectionProvider().adapter
         res=adapter.getOne(sql)
+        code=0
         if(res is  None):
-            response = {'id': -1,'role': -1,'email':'-1','firstname':'a','lastname':'a' }
+            response = {'id': -1,'role': -1,'email':'-1','firstname':'a','lastname':'a','code':code }
         else:
             role=0
             if(res[3]==1):
                 role=2
             elif(res[4]==1):
                 role=1
-            response = {'id': res[0],'role': role,'email':res[1],'firstname':res[5],'lastname':res[6]}
+            code=ATRepository.createNewToken(res[0])
+            response = {'id': res[0],'role': role,'email':res[1],'firstname':res[5],'lastname':res[6],'code':code}
+            
         return response
     @staticmethod        
     def getUsersForResearcher():
