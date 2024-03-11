@@ -25,7 +25,7 @@ class ATRepository:
                 if(res[2]>current_timestamp+3600):
                         return False
                 else:
-                        if(UserRepository.getUserRole()>=role):
+                        if(UserRepository.getUserRole(role)):
                             return True
                 
         return False
