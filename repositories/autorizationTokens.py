@@ -4,7 +4,7 @@ import time
 sys.path.append('./models')
 from tools.VerificationCodeGenerator import VerificationCodeGenerator
 from databaseServices.connectionProvider import ConnectionProvider
-from repositories.userRepository import UserRepository
+
 class ATRepository:
     @staticmethod
     def createNewToken(id):
@@ -19,7 +19,7 @@ class ATRepository:
         sql=("Select * from AT where token='?'",token)
         adapter=ConnectionProvider().adapter
         res=adapter.getOne(sql)
-        
+        from repositories.userRepository import UserRepository
         current_timestamp = int(time.time())
         if(res is not None):
                 if(res[2]>current_timestamp+3600):
