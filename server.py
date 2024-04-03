@@ -111,8 +111,14 @@ def register():
 @app.route('/codes', methods=['GET'])
 def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
+    print(kod)
     VCRepository.save_verification_code(kod)
+    VCRepository.updateCode(kod)
     return "ok",200
+
+@app.route('/', methods=['GET'])
+def running():
+    return "server is running",200
 
 @app.route('/records', methods=['POST'])
 def create_record():
