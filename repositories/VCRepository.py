@@ -7,21 +7,21 @@ class VCRepository:
 		adapter=ConnectionProvider().adapter
 		return adapter.getOne(sql)
 	@staticmethod
-	def save_verification_code(code):
-		sql='INSERT INTO VerificationCodes (code) VALUES (?)', code
+	def save_verification_code(code:str):
+		sql="INSERT INTO VerificationCodes (code) VALUES (?)"
 		adapter=ConnectionProvider().adapter
-		inserted_id = adapter.saveOne(sql,code)
+		inserted_id = adapter.saveOne(sql,(code,))
 		return inserted_id
 		
 	@staticmethod
 	def updateCode(code):
-		sql="UPDATE VerificationCodes SET used=1 WHERE code='"+str(code)+"'"
+		sql="UPDATE VerificationCodes SET used=1 WHERE code=?"
 		adapter=ConnectionProvider().adapter
-		adapter.getOne(sql)
+		adapter.saveOne(sql,(code,))
 		
 	@staticmethod
 	def isCodeTaken(codee):
-		
 		sql="SELECT used FROM VerificationCodes WHERE code='"+codee+"'"
 		adapter=ConnectionProvider().adapter
 		return adapter.getOne(sql)
+

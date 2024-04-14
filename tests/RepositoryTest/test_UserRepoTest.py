@@ -6,23 +6,23 @@ import os
 @pytest.fixture
 def environment():
     os.environ['database_type'] = 'SQLITE'
-    os.environ['database_connection_string'] = 'testing.db'
+    os.environ['database_connection_string'] = 'Testing2.db'
 
 def test_login_false():
     os.environ['database_type'] = 'SQLITE'
-    os.environ['database_connection_string'] = 'testing.db'
+    os.environ['database_connection_string'] = 'Testing2.db'
     assert -1==UserRepository.trytoLoginDatabase("nevim","nevim")['id']
 def test_login_true():
-    assert -1!=UserRepository.trytoLoginDatabase("lalgate5@prweb.com","mfransewich5")['id']
+    assert -1!=UserRepository.trytoLoginDatabase("arase2@devhub.com","3")['id']
 
 def test_delete_user():
-    name="bgoodayrr@reference.com"
-    password="gkayesrr"
+    name="kludgate3@hugedomains.com"
+    password="4"
     UserRepository.deleteUser(name,password)
-    assert -1==UserRepository.trytoLoginDatabase(name,password)[0]
+    assert -1==UserRepository.trytoLoginDatabase(name,password)['id']
 
 def test_register_user():
-    name="bgoodayrr@reference.com"
-    password="gkayesrr"
+    name="kludgate3@hugedomains.com"
+    password="4"
     UserRepository.registerUser(name,password)
-    assert -1!=UserRepository.trytoLoginDatabase(name,password)[0]
+    assert -1!=UserRepository.trytoLoginDatabase(name,password)['id']

@@ -25,9 +25,9 @@ def test_save_record_with_moves():
         assert len(record.records)==0
 
         formated=[]
-        formated.append((0.56,0.47,1,100,id))
-        formated.append((0.56,0.47,1,100,id))
-        formated.append((0.56,0.47,1,100,id))
+        formated.append((0.56,0.47,1,100,id,1))
+        formated.append((0.56,0.47,1,100,id,2))
+        formated.append((0.56,0.47,1,100,id,3))
         RecordRepository.saveMovesToDatabase(formated)
         record=RecordRepository.loadRecordByID(id)[0]
         assert gr.mazeID==record.mazeID
