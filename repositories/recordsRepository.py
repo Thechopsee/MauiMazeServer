@@ -1,10 +1,8 @@
-import sqlite3 
 import sys
 sys.path.append('./models')
 from GameRecord import GameRecord
 from MoveRecord import MoveRecord
 from databaseServices.connectionProvider import ConnectionProvider
-
 
 class RecordRepository:
     @staticmethod

@@ -1,8 +1,8 @@
-import sqlite3 
 import datetime
 from models.Maze import Maze
 from models.Edge import Edge
 from databaseServices.connectionProvider import ConnectionProvider
+
 class MazeRepository:
     @staticmethod
     def saveEdgeToDatabase(edge):

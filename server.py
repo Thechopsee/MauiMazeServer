@@ -1,17 +1,12 @@
 from flask import Flask, request, jsonify
 import json
+import os
 from repositories.mazeRepository import MazeRepository
 from repositories.userRepository import UserRepository
 from repositories.VCRepository import VCRepository
 from repositories.recordsRepository import RecordRepository
 from repositories.autorizationTokens import ATRepository
 from tools.VerificationCodeGenerator import VerificationCodeGenerator
-
-from databaseServices.databaseAdapter import DatabaseAdapter
-from databaseServices.sqliteAdapter import SqliteAdapter
-from databaseServices.connectionProvider import ConnectionProvider
-import os
-
 
 app = Flask(__name__)
 
@@ -30,6 +25,7 @@ def create_maze():
     response = {'message': id}
     status_code = 200
     return jsonify(response), status_code
+
 @app.route('/mazes/<maze_id>', methods=['POST'])
 def get_maze(maze_id):    
     result=MazeRepository.getMaze(maze_id)
@@ -108,7 +104,6 @@ def register():
     else:
         return "server error",500
     
-
 @app.route('/codes', methods=['GET'])
 def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
@@ -133,9 +128,6 @@ def create_record():
         formatedRecords.append((tupled))
     RecordRepository.saveMovesToDatabase(formatedRecords)
     return "ok",200
-
-
-
 
 if __name__ == '__main__':
     ip = os.environ.get('IP')

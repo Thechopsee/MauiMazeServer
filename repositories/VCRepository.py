@@ -1,5 +1,5 @@
-import sqlite3
 from databaseServices.connectionProvider import ConnectionProvider
+
 class VCRepository:
 	@staticmethod
 	def count_of_unused():
