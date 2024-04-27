@@ -93,7 +93,7 @@ def register():
     email = data.get('email')
     password = data.get('password')
     code = data.get('code')
-    result=VCRepository.isCodeTaken(code)
+    result=VCRepository.isCodeTaken(code)[0]
     print(result)
     if(result==0):
         UserRepository.registerUser(email,password)
