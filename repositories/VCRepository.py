@@ -7,6 +7,11 @@ class VCRepository:
 		adapter=ConnectionProvider().adapter
 		return adapter.getOne(sql)
 	@staticmethod
+	def get_unused():
+		sql='Select code from VerificationCodes WHERE used=0'
+		adapter=ConnectionProvider().adapter
+		return adapter.getMany(sql)
+	@staticmethod
 	def save_verification_code(code:str):
 		sql="INSERT INTO VerificationCodes (code) VALUES (?)"
 		adapter=ConnectionProvider().adapter

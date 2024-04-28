@@ -93,10 +93,12 @@ def register():
     email = data.get('email')
     password = data.get('password')
     code = data.get('code')
+    first= data.get('first')
+    last =data.get('last')
     result=VCRepository.isCodeTaken(code)[0]
     print(result)
     if(result==0):
-        UserRepository.registerUser(email,password)
+        UserRepository.registerUser(email,password,first,last)
         VCRepository.updateCode(code)
         return "ok",200
     elif(result==1):
@@ -107,10 +109,16 @@ def register():
 @app.route('/codes', methods=['GET'])
 def create_codes():
     kod=VerificationCodeGenerator.generate_verification_code()
-    print(kod)
     VCRepository.save_verification_code(kod)
-    VCRepository.updateCode(kod)
     return "ok",200
+    
+@app.route('/codes/unused', methods=['GET'])
+def get_codes():
+    unused = VCRepository.get_unused()
+    res = [] 
+    for x in unused:
+        res.append({"code": x[0]})
+    return jsonify(res), 200
 
 @app.route('/', methods=['GET'])
 def running():

@@ -42,13 +42,11 @@ class UserRepository:
         if(res[1]==1):
             role+=1
         return role
-
-
     @staticmethod
-    def registerUser(email,password):
-        sql="INSERT INTO User (email,password) VALUES (?,?)"
+    def registerUser(email,password,first,last):
+        sql="INSERT INTO User (email,password,firstname,lastname) VALUES (?,?,?,?)"
         adapter=ConnectionProvider().adapter
-        return adapter.saveOne(sql,(email,password))
+        return adapter.saveOne(sql,(email,password,first,last))
 
     @staticmethod
     def deleteUser(email,password):
