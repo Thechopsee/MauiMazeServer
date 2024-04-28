@@ -24,5 +24,5 @@ def test_delete_user():
 def test_register_user():
     name="kludgate3@hugedomains.com"
     password="4"
-    UserRepository.registerUser(name,password)
+    UserRepository.registerUser(name,password,"testname","testname2")
     assert -1!=UserRepository.trytoLoginDatabase(name,password)['id']
