@@ -13,7 +13,6 @@ app = Flask(__name__)
 @app.route('/mazes', methods=['POST'])
 def create_maze():
     data = request.get_json()
-    print(request.headers)
     id = data.get('userID')
     mazedto = data.get('mazedto')
     mazeid=MazeRepository.saveMazetoDatabase(id,"Classic",mazedto["startCell"],mazedto["endCell"],mazedto["size"])
@@ -96,7 +95,6 @@ def register():
     first= data.get('first')
     last =data.get('last')
     result=VCRepository.isCodeTaken(code)[0]
-    print(result)
     if(result==0):
         UserRepository.registerUser(email,password,first,last)
         VCRepository.updateCode(code)
