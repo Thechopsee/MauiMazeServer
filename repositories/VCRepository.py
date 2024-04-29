@@ -17,13 +17,11 @@ class VCRepository:
 		adapter=ConnectionProvider().adapter
 		inserted_id = adapter.saveOne(sql,(code,))
 		return inserted_id
-		
 	@staticmethod
 	def updateCode(code):
 		sql="UPDATE VerificationCodes SET used=1 WHERE code=?"
 		adapter=ConnectionProvider().adapter
 		adapter.saveOne(sql,(code,))
-		
 	@staticmethod
 	def isCodeTaken(codee):
 		sql="SELECT used FROM VerificationCodes WHERE code='"+codee+"'"
